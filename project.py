@@ -53,9 +53,6 @@ database.commit()
 database.close()
 
 # Print results
-print ""
-print "All Done! Bye, for now."
-print ""
 columns = str(sheet.ncols)
 rows = str(sheet.nrows)
-print "I just imported " , columns , " columns and " , rows , " rows to MySQL!"
+print "Imported " , columns , " columns and " , rows , " rows to MySQL!"
