@@ -18,7 +18,7 @@ cursor = database.cursor()
 drop2 = "DROP TABLE Reviews;"
 drop1 = "DROP TABLE Rest;"
 create1 = "CREATE TABLE Rest (rid int PRIMARY KEY, id int, name varchar(100), categories varchar(100), price varchar(12), address longtext,phonenumber varchar(20) NULL, numberofreviews int, averagerating int, link varchar(100));"
-create2 = "CREATE TABLE Reviews(row bigint, rid int, user_name varchar(50), user_city varchar(100),num_friends int,num_reviews int,rating int, date date, useful int,funny int,cool int,review longtext,CONSTRAINT pk_rid_name PRIMARY KEY (row), CONSTRAINT fk_rev_rest FOREIGN KEY (rid)REFERENCES  Rest(rid));"
+create2 = "CREATE TABLE Reviews(row bigint, rid int, user_name varchar(50), user_city varchar(100),num_friends int,num_reviews int,rating int, date date, useful int,funny int,cool int,review text CHARACTER SET latin1,CONSTRAINT pk_rid_name PRIMARY KEY (row), CONSTRAINT fk_rev_rest FOREIGN KEY (rid)REFERENCES  Rest(rid));"
 
 cursor.execute(drop2)
 cursor.execute(drop1)
