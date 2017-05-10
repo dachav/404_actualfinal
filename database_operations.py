@@ -71,6 +71,14 @@ def get_sentiment(text):
       blob = TextBlob(text)
       return blob.sentiment.polarity
 
+def get_avg_sentiment(genre):
+      sentiment = list()
+      reviews = get_reviews(genre)
+      for review in reviews:
+            sentiment.append(get_sentiment(review[1]))
+      average = sum(sentiment) / float(len(sentiment))
+      return average
+
 def get_ratings_row(row):
       ratings = list()
       db = MySQLdb.connect("localhost","root","ilikeit", "mysql")
@@ -83,16 +91,18 @@ def get_ratings_row(row):
       except:
             db.rollback()
 
-rev = []
-test = get_categories()
-reviews = get_reviews("Wine")
-for review in reviews:
-      test = review[1]
-      rev.append([get_sentiment(test), get_ratings_row(int(review[0]))])
-for view in rev:
-      print view
-      
+#code below get sentiment and yelp rating
+ 
+##rev = []
+##test = get_categories()
+##reviews = get_reviews("Wine")
+##for review in reviews:
+##      test = review[1]
+##      rev.append([get_sentiment(test), get_ratings_row(int(review[0]))])
+##for view in rev:
+##      print view
+##      
 
-
+print get_avg_sentiment("Wine")
 
 
