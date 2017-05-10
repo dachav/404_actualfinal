@@ -8,4 +8,4 @@ def build_df():
 		#populate row of datafram
 		avg_df.loc(cuisine) = [cuisine, rating, sentiment]
 
-		return avg
+		return avg_df
