@@ -90,6 +90,30 @@ def get_ratings_row(row):
             return float(result[0])
       except:
             db.rollback()
+def add_sentiment():
+      # Establish a MySQL connection
+      database = MySQLdb.connect(host="localhost", user = "root", passwd = "ilikeit", db = "mysql", use_unicode=True, charset="utf8")
+
+      # Get the cursor, which is used to traverse the database, line by line
+      cursor = database.cursor()
+
+      cuisines = get_categories()
+
+      for cuisine in cuisines:
+            reviews = get_reviews(cuisine)
+            for review in reviews:
+                  sentiment = get_sentiment(review[1])
+                  row = int(review[0])
+                  sql = "UPDATE Reviews SET sentiment = " + str(sentiment) +  " WHERE row = " + str(row) + ";"
+                  cursor.execute(sql)
+      # Close the cursor
+      cursor.close()
+      # Commit the transaction
+      database.commit()
+      # Close the database connection
+      database.close()
+
+#add_sentiment()
 
 #code below get sentiment and yelp rating
  
@@ -102,7 +126,5 @@ def get_ratings_row(row):
 ##for view in rev:
 ##      print view
 ##      
-
-print get_avg_sentiment("Wine")
 
 

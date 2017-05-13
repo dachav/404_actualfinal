@@ -18,7 +18,7 @@ cursor = database.cursor()
 drop2 = "DROP TABLE Reviews;"
 drop1 = "DROP TABLE Rest;"
 create1 = "CREATE TABLE Rest (rid int PRIMARY KEY, id int, name varchar(100), categories varchar(100), price varchar(12), address longtext,phonenumber varchar(20) NULL, numberofreviews int, averagerating int, link varchar(100));"
-create2 = "CREATE TABLE Reviews(row bigint, rid int, user_name varchar(50), user_city varchar(100),num_friends int,num_reviews int,rating int, date date, useful int,funny int,cool int,review text CHARACTER SET latin1,CONSTRAINT pk_rid_name PRIMARY KEY (row), CONSTRAINT fk_rev_rest FOREIGN KEY (rid)REFERENCES  Rest(rid));"
+create2 = "CREATE TABLE Reviews(row bigint,sentiment float, rid int, user_name varchar(50), user_city varchar(100),num_friends int,num_reviews int,rating int, date date, useful int,funny int,cool int,review text CHARACTER SET latin1,CONSTRAINT pk_rid_name PRIMARY KEY (row), CONSTRAINT fk_rev_rest FOREIGN KEY (rid)REFERENCES  Rest(rid));"
 
 cursor.execute(drop2)
 cursor.execute(drop1)
@@ -29,7 +29,7 @@ cursor.execute(create2)
 
 # Create the INSERT INTO sql query
 query1 = """INSERT INTO Rest VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
-query2 = """INSERT INTO Reviews VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s, %s)"""
+query2 = """INSERT INTO Reviews VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s, %s)"""
 
 # Create a For loop to iterate through each row in the XLS file, starting at row 2 to skip the headers
 for r in range(1, sheet1.nrows):
@@ -52,7 +52,7 @@ for r in range(1, sheet1.nrows):
       cursor.execute(query1, values1)
 # Create a For loop to iterate through each row in the XLS file, starting at row 2 to skip the headers
 for r in range(1, sheet2.nrows):
-      row = r
+      row    = r
       rid      = sheet2.cell(r,0).value
       user_name      = sheet2.cell(r,1).value
       user_city          = sheet2.cell(r,2).value
@@ -72,7 +72,7 @@ for r in range(1, sheet2.nrows):
 
 
       # Assign values from each row
-      values2 = (row, rid, user_name, user_city, num_friends, num_reviews, rating, date, useful, funny, cool, review)
+      values2 = (row, 0 , rid, user_name, user_city, num_friends, num_reviews, rating, date, useful, funny, cool, review)
 
       # Execute sql Query
       cursor.execute(query2, values2)
