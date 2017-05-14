@@ -5,10 +5,9 @@ import matplotlib.pyplot as plt
 from database_operations import *
 from pylab import *
 from numpy import *
+from numpy.random import *
 from scipy.stats import *
-from sklearn import datasets, linear_model
-from sklearn.linear_model import LinearRegression
-import statsmodels.api as sm
+
 
 def get_df():
 	i = 1
@@ -30,20 +29,17 @@ def get_df():
 def do_regression(y, x):
 	df = get_df()
 
-	slope, intercept = np.polyfit(df[x], df[y], 1)
+	slope,intercept,r_value,p_value,slope_std_error = stats.linregress(df[x],df[y]) 
 
 	y_modeled = df[x]*slope + intercept
 
-	equation = 'y = ' + str(slope) + 'x' ' + ' + str(intercept) + ' p-value = '
+	equation = y + ' = ' + str(slope) + "*" + x + ' + ' + str(intercept) + ' p-value = ' + str(p_value)
 
 	plot(df[x], y_modeled,'-r',linewidth=1)
 	plot(df[x], df[y],'ob',markersize=2)
 
 	print equation
 	plt.show()
-	est = sm.OLS(df[y],df[x])
-	est2 = est.fit()
-	print(est2.summary())
 
 
 do_regression('Average Sentiment','Average Rating')
