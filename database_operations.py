@@ -18,6 +18,23 @@ def get_categories():
             return sort_cat
       except:
             db.rollback()
+def get_tag_categories(tag):
+      categories = list()
+      db = MySQLdb.connect("localhost","root","ilikeit", "mysql")
+      cursor = db.cursor()
+      sql = "SELECT DISTINCT r.categories FROM Rest r, reviews s WHERE NOT r.categories LIKE '%Wrong%' AND s." + tag + " > 0;"
+      try:
+            cursor.execute(sql)
+            result = cursor.fetchall()
+            for row in result:
+                  rest_cat = row[0][1:].strip().split(", ")
+                  for rec in rest_cat:
+                        if rec not in categories:
+                              categories.append(rec)
+            sort_cat = sorted(categories)
+            return sort_cat
+      except:
+            db.rollback()
 
 def num_rest(genre):
       db = MySQLdb.connect("localhost","root","ilikeit", "mysql")
@@ -57,6 +74,34 @@ def get_reviews(genre):
       db = MySQLdb.connect("localhost","root","ilikeit", "mysql")
       cursor = db.cursor()
       sql = "SELECT row, review FROM Rest r, Reviews v WHERE r.rid = v.rid and categories LIKE '%" + genre + "%' ORDER BY v.row"
+      try:
+            cursor.execute(sql)
+            result = cursor.fetchall()
+            for row in result:
+                  reviews.append([row[0], row[1]])
+            return reviews
+      except:
+            db.rollback()
+
+def get_good_reviews():
+      reviews = list()
+      db = MySQLdb.connect("localhost","root","ilikeit", "mysql")
+      cursor = db.cursor()
+      sql = "SELECT row, review FROM Rest r, Reviews v WHERE r.rid = v.rid and v.rating = 5 and v.sentiment > .6 ORDER BY v.row"
+      try:
+            cursor.execute(sql)
+            result = cursor.fetchall()
+            for row in result:
+                  reviews.append([row[0], row[1]])
+            return reviews
+      except:
+            db.rollback()
+
+def get_bad_reviews():
+      reviews = list()
+      db = MySQLdb.connect("localhost","root","ilikeit", "mysql")
+      cursor = db.cursor()
+      sql = "SELECT row, review FROM Rest r, Reviews v WHERE r.rid = v.rid and v.rating = 1 and v.sentiment < 0 ORDER BY v.row"
       try:
             cursor.execute(sql)
             result = cursor.fetchall()
@@ -114,17 +159,5 @@ def add_sentiment():
       database.close()
 
 #add_sentiment()
-
-#code below get sentiment and yelp rating
- 
-##rev = []
-##test = get_categories()
-##reviews = get_reviews("Wine")
-##for review in reviews:
-##      test = review[1]
-##      rev.append([get_sentiment(test), get_ratings_row(int(review[0]))])
-##for view in rev:
-##      print view
-##      
 
 
