@@ -1,6 +1,7 @@
 import MySQLdb
 from textblob import TextBlob
 
+#gets list of cuisine types
 def get_categories():
       categories = list()
       db = MySQLdb.connect("localhost","root","ilikeit", "mysql")
@@ -18,24 +19,7 @@ def get_categories():
             return sort_cat
       except:
             db.rollback()
-def get_tag_categories(tag):
-      categories = list()
-      db = MySQLdb.connect("localhost","root","ilikeit", "mysql")
-      cursor = db.cursor()
-      sql = "SELECT DISTINCT r.categories FROM Rest r, reviews s WHERE NOT r.categories LIKE '%Wrong%' AND s." + tag + " > 0;"
-      try:
-            cursor.execute(sql)
-            result = cursor.fetchall()
-            for row in result:
-                  rest_cat = row[0][1:].strip().split(", ")
-                  for rec in rest_cat:
-                        if rec not in categories:
-                              categories.append(rec)
-            sort_cat = sorted(categories)
-            return sort_cat
-      except:
-            db.rollback()
-
+#gets number of restuarants given a cuisines
 def num_rest(genre):
       db = MySQLdb.connect("localhost","root","ilikeit", "mysql")
       cursor = db.cursor()
@@ -46,7 +30,7 @@ def num_rest(genre):
             return int(result[0])
       except:
             db.rollback()
-
+#gets average rating of restuarants given a cuisines
 def avg_rating(genre):
       db = MySQLdb.connect("localhost","root","ilikeit", "mysql")
       cursor = db.cursor()
@@ -57,7 +41,7 @@ def avg_rating(genre):
             return float(result[0])
       except:
             db.rollback()
-
+#gets number of reviews of restuarants given a cuisines
 def num_reviews(genre):
       db = MySQLdb.connect("localhost","root","ilikeit", "mysql")
       cursor = db.cursor()
@@ -68,7 +52,7 @@ def num_reviews(genre):
             return float(result[0])
       except:
             db.rollback()
-
+#gets row number and reviews given a cuisines
 def get_reviews(genre):
       reviews = list()
       db = MySQLdb.connect("localhost","root","ilikeit", "mysql")
@@ -83,6 +67,7 @@ def get_reviews(genre):
       except:
             db.rollback()
 
+#get reviews and row given a cuisine where rating was 5 stars and sentiment > .6
 def get_good_reviews():
       reviews = list()
       db = MySQLdb.connect("localhost","root","ilikeit", "mysql")
@@ -96,6 +81,7 @@ def get_good_reviews():
             return reviews
       except:
             db.rollback()
+#get reviews and row given a cuisine where rating was 1 star and sentiment < 0
 
 def get_bad_reviews():
       reviews = list()
@@ -111,11 +97,13 @@ def get_bad_reviews():
       except:
             db.rollback()
 
+#gets sentiment score given text
 def get_sentiment(text):
       text = text.decode('ascii', 'replace')
       blob = TextBlob(text)
       return blob.sentiment.polarity
 
+#gets sentiment score given text
 def get_avg_sentiment(genre):
       sentiment = list()
       reviews = get_reviews(genre)
@@ -124,6 +112,7 @@ def get_avg_sentiment(genre):
       average = sum(sentiment) / float(len(sentiment))
       return average
 
+#gets average sentiment of restuarants given a cuisines
 def get_ratings_row(row):
       ratings = list()
       db = MySQLdb.connect("localhost","root","ilikeit", "mysql")
@@ -135,6 +124,7 @@ def get_ratings_row(row):
             return float(result[0])
       except:
             db.rollback()
+#adds sentiment score to mysql table
 def add_sentiment():
       # Establish a MySQL connection
       database = MySQLdb.connect(host="localhost", user = "root", passwd = "ilikeit", db = "mysql", use_unicode=True, charset="utf8")
